@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TRY OUT TKA BAHASA JEPANG 2026 - PAKET 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --biru-tua:#1e5a8e;
+  --biru:#2f80c7;
+  --biru-muda:#eaf4fd;
+  --biru-muda2:#d3e9fb;
+  --biru-accent:#4aa3e0;
+  --putih:#ffffff;
+  --merah:#e05252;
+  --hijau:#3fb47a;
+  --kuning:#f0b429;
+  --abu:#7a8ba0;
+  --shadow:0 4px 16px rgba(0,0,0,0.35);
+  --hijau-tua:#0e3b2b;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:'Segoe UI', Tahoma, sans-serif;
+  background-color:#0e3b2b;
+  background-image:linear-gradient(160deg, #145a3f 0%, #0e3b2b 55%, #082a1e 100%);
+  min-height:100vh;
+  color:#1c3550;
+  /* KUNCI SOAL: teks tidak bisa diseleksi / disalin */
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+}
+input, textarea{ -webkit-user-select:text; -moz-user-select:text; user-select:text; }
+img, svg{ -webkit-user-drag:none; user-drag:none; }
+.screen{ display:none; min-height:100vh; }
+.screen.active{ display:flex; flex-direction:column; }
+
+.app-header{
+  background:linear-gradient(90deg, var(--biru-tua), var(--biru));
+  color:#fff;
+  padding:18px 20px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.app-header h1{ font-size:20px; letter-spacing:1px; }
+.app-header p{ font-size:12px; opacity:0.9; margin-top:4px; }
+
+#screen-start{ align-items:center; justify-content:center; padding:20px; }
+.start-card{
+  background:var(--putih);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  max-width:480px;
+  width:100%;
+  padding:30px 26px;
+  border:1px solid var(--biru-muda2);
+  animation:fadeUp .5s ease;
+}
+@keyframes fadeUp{ from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);} }
+.start-card .badge{
+  background:var(--biru-muda);
+  color:var(--biru-tua);
+  display:inline-block;
+  padding:5px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+  margin-bottom:14px;
+}
+.start-card h2{ color:var(--biru-tua); font-size:22px; margin-bottom:6px; }
+.start-card .desc{ color:var(--abu); font-size:13px; margin-bottom:22px; line-height:1.5; }
+.form-group{ margin-bottom:16px; }
+.form-group label{ display:block; font-size:13px; font-weight:600; color:var(--biru-tua); margin-bottom:6px; }
+.form-group input{
+  width:100%;
+  padding:12px 14px;
+  border:2px solid var(--biru-muda2);
+  border-radius:10px;
+  font-size:14px;
+  background:var(--biru-muda);
+  transition:.2s;
+  color:#1c3550;
+}
+.form-group input:focus{ outline:none; border-color:var(--biru-accent); background:#fff; }
+.info-box{
+  background:var(--biru-muda);
+  border-left:4px solid var(--biru-accent);
+  border-radius:8px;
+  padding:12px 14px;
+  font-size:12px;
+  color:var(--biru-tua);
+  margin-bottom:20px;
+  line-height:1.6;
+}
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  border:none; border-radius:12px; cursor:pointer;
+  font-weight:700; font-size:14px; padding:13px 22px;
+  transition:.2s; width:100%;
+}
+.btn-primary{ background:linear-gradient(90deg, var(--biru), var(--biru-accent)); color:#fff; box-shadow:0 4px 12px rgba(47,128,199,0.35);}
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(47,128,199,0.45); }
+.btn-primary:disabled{ background:#c3cfdb; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-secondary{ background:var(--biru-muda); color:var(--biru-tua); border:2px solid var(--biru-muda2); }
+.btn-secondary:hover{ background:var(--biru-muda2); }
+.btn-outline{ background:transparent; color:var(--biru); border:2px solid var(--biru); }
+.btn-danger{ background:linear-gradient(90deg,#e05252,#f07070); color:#fff; }
+
+#screen-quiz{ padding-bottom:20px; }
+.quiz-topbar{
+  position:sticky; top:0; z-index:50;
+  background:linear-gradient(90deg, var(--biru-tua), var(--biru));
+  color:#fff;
+  padding:12px 18px;
+  display:flex; align-items:center; justify-content:space-between;
+  box-shadow:var(--shadow);
+  flex-wrap:wrap; gap:10px;
+}
+.quiz-topbar .peserta-info{ font-size:12px; line-height:1.4; }
+.quiz-topbar .peserta-info b{ font-size:14px; }
+.timer-box{
+  background:rgba(255,255,255,0.15);
+  border-radius:10px;
+  padding:8px 16px;
+  text-align:center;
+  min-width:110px;
+}
+.timer-box .label{ font-size:10px; opacity:.85; letter-spacing:1px;}
+.timer-box .time{ font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; }
+.timer-box.warning{ background:rgba(224,82,82,0.35); animation:pulse 1s infinite; }
+@keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.6;} }
+
+.quiz-body{
+  display:flex; gap:18px; padding:18px; max-width:1100px; margin:0 auto; width:100%;
+  align-items:flex-start; flex-wrap:wrap;
+}
+.nav-panel{
+  background:var(--putih);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:16px;
+  width:260px;
+  flex-shrink:0;
+  border:1px solid var(--biru-muda2);
+  transition:width .3s ease, padding .3s ease, opacity .25s ease, margin .3s ease, border .3s ease;
+  overflow:hidden;
+}
+.nav-panel.collapsed{ width:0; padding:0; margin:0; border:none; opacity:0; pointer-events:none; }
+.nav-panel-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.btn-collapse{
+  background:var(--biru-muda); border:1px solid var(--biru-muda2); color:var(--biru-tua);
+  border-radius:8px; cursor:pointer; font-size:11px; font-weight:700; padding:5px 9px;
+  white-space:nowrap; flex-shrink:0;
+}
+.btn-collapse:hover{ background:var(--biru-muda2); }
+
+.nav-reopen-tab{
+  display:none; position:fixed; left:0; top:50%; transform:translateY(-50%);
+  background:linear-gradient(180deg, var(--biru-tua), var(--biru));
+  color:#fff; border:none; border-radius:0 12px 12px 0;
+  padding:14px 8px; cursor:pointer; z-index:60; box-shadow:var(--shadow);
+  font-size:11px; font-weight:700; writing-mode:vertical-rl; text-orientation:mixed;
+  letter-spacing:1px;
+}
+.nav-reopen-tab.visible{ display:block; }
+.legend{ display:flex; flex-wrap:wrap; gap:8px; font-size:10px; margin-bottom:12px; }
+.legend span{ display:flex; align-items:center; gap:4px; color:var(--abu); }
+.legend i{ width:10px; height:10px; border-radius:3px; display:inline-block; }
+.nav-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+.nav-btn{
+  aspect-ratio:1; border-radius:8px; border:none; cursor:pointer;
+  font-size:12px; font-weight:700; color:#fff;
+  background:var(--merah); transition:.15s; position:relative;
+}
+.nav-btn:hover{ transform:scale(1.08); }
+.nav-btn.answered{ background:var(--hijau); }
+.nav-btn.doubt{ background:var(--kuning); color:#5a4400; }
+.nav-btn.current{ box-shadow:0 0 0 3px var(--biru-tua); }
+.nav-summary{ margin-top:14px; font-size:11px; color:var(--abu); line-height:1.8; }
+.nav-summary b{ color:var(--biru-tua); }
+
+.question-panel{
+  background:var(--putih); border-radius:16px; box-shadow:var(--shadow);
+  padding:22px; flex:1; min-width:280px; border:1px solid var(--biru-muda2);
+}
+.q-meta{ display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;}
+.q-number-badge{ background:var(--biru-tua); color:#fff; font-weight:800; font-size:13px; padding:6px 14px; border-radius:20px; }
+.q-type-badge{ background:var(--biru-muda); color:var(--biru-tua); font-size:11px; font-weight:700; padding:6px 12px; border-radius:20px; border:1px solid var(--biru-muda2); }
+
+.stimulus-box{
+  background:var(--biru-muda); border:1px solid var(--biru-muda2); border-radius:12px;
+  padding:16px; margin-bottom:16px; font-size:17px; line-height:2; color:#1c3550; white-space:pre-line;
+  font-family:'Noto Sans JP', sans-serif;
+}
+.stimulus-box .stim-label{ font-size:11px; font-weight:700; color:var(--biru); margin-bottom:8px; display:block; font-family:'Segoe UI', sans-serif; }
+.q-image-container{ text-align:center; margin-bottom:16px; }
+.instruksi{ font-size:12px; color:var(--abu); font-style:italic; margin-bottom:10px; }
+.q-text{ font-size:18px; line-height:1.8; color:#16314f; margin-bottom:18px; font-weight:600; white-space:pre-line; font-family:'Noto Sans JP', sans-serif; }
+
+.options{ display:flex; flex-direction:column; gap:10px; }
+.option{
+  display:flex; align-items:center; gap:12px; padding:13px 16px;
+  border:2px solid var(--biru-muda2); border-radius:12px; cursor:pointer;
+  transition:.15s; background:#fff;
+}
+.option:hover{ background:var(--biru-muda); border-color:var(--biru-accent); }
+.option.selected{ background:var(--biru-muda2); border-color:var(--biru); }
+.option .opt-mark{
+  width:26px; height:26px; border-radius:50%; border:2px solid var(--biru-accent);
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;
+  color:var(--biru-tua); flex-shrink:0; background:#fff;
+}
+.option.selected .opt-mark{ background:var(--biru); color:#fff; }
+.option.checkbox .opt-mark{ border-radius:6px; }
+.option .opt-text{ font-size:17px; color:#1c3550; font-family:'Noto Sans JP', sans-serif; }
+
+.kategori-table{ width:100%; border-collapse:collapse; margin-top:6px; }
+.kategori-table tr{ border-bottom:1px solid var(--biru-muda2); }
+.kategori-table td{ padding:12px 8px; vertical-align:middle; }
+.kategori-table td.stmt{ font-size:16px; color:#1c3550; font-family:'Noto Sans JP', sans-serif; }
+.kategori-choice{ display:flex; gap:8px; justify-content:flex-end; }
+.kc-btn{
+  padding:8px 16px; border-radius:8px; border:2px solid var(--biru-muda2);
+  background:#fff; cursor:pointer; font-size:12px; font-weight:700; color:var(--abu); transition:.15s;
+}
+.kc-btn.benar.active{ background:var(--hijau); color:#fff; border-color:var(--hijau); }
+.kc-btn.salah.active{ background:var(--merah); color:#fff; border-color:var(--merah); }
+
+.q-nav-buttons{ display:flex; justify-content:space-between; margin-top:22px; gap:10px; flex-wrap:wrap; }
+.q-nav-buttons .left-group, .q-nav-buttons .right-group{ display:flex; gap:10px; }
+.q-nav-buttons .btn{ width:auto; padding:11px 18px; }
+
+#screen-result{ align-items:center; justify-content:center; padding:30px 16px; }
+.result-card{
+  background:var(--putih); border-radius:20px; box-shadow:var(--shadow);
+  max-width:520px; width:100%; padding:36px 28px; text-align:center;
+  border:1px solid var(--biru-muda2);
+}
+.result-card .trophy{ font-size:52px; margin-bottom:8px; }
+.result-card h2{ color:var(--biru-tua); font-size:22px; margin-bottom:4px; }
+.result-card .sub{ color:var(--abu); font-size:13px; margin-bottom:24px; }
+.score-circle{
+  width:150px; height:150px; border-radius:50%;
+  background:conic-gradient(var(--biru) calc(var(--pct)*1%), var(--biru-muda2) 0);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 22px auto; position:relative;
+}
+.score-circle::before{ content:''; position:absolute; width:118px; height:118px; background:#fff; border-radius:50%; }
+.score-circle .score-txt{ position:relative; z-index:2; font-size:32px; font-weight:800; color:var(--biru-tua); }
+.result-stats{ display:flex; justify-content:center; gap:22px; margin-bottom:26px; flex-wrap:wrap; }
+.result-stats div{ text-align:center; }
+.result-stats .num{ font-size:20px; font-weight:800; }
+.result-stats .lbl{ font-size:11px; color:var(--abu); }
+.result-stats .benar .num{ color:var(--hijau); }
+.result-stats .salah .num{ color:var(--merah); }
+.result-actions{ display:flex; flex-direction:column; gap:12px; }
+
+footer.foot-note{ text-align:center; font-size:11px; color:#b9d9c8; padding:16px; }
+
+.pdf-overlay{
+  display:none; position:fixed; inset:0; z-index:999;
+  background:rgba(28,53,80,0.55); align-items:center; justify-content:center;
+}
+.pdf-overlay.active{ display:flex; }
+.pdf-overlay-box{
+  background:#fff; border-radius:16px; padding:28px 36px; text-align:center;
+  box-shadow:var(--shadow); max-width:280px;
+}
+.pdf-spinner{
+  width:42px; height:42px; border:4px solid var(--biru-muda2); border-top-color:var(--biru);
+  border-radius:50%; margin:0 auto 14px auto; animation:spin 0.8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.pdf-overlay-box p{ font-size:13px; color:var(--biru-tua); font-weight:600; }
+.pdf-overlay-box span{ font-size:11px; color:var(--abu); }
+
+#pdf-render-temp{
+  position:fixed; left:-99999px; top:0; background:#ffffff;
+  font-family:'Noto Sans JP','Segoe UI',sans-serif; color:#1c3550;
+}
+.pdf-cover{ padding:4px; }
+.pdf-cover .pdf-band{ background:#1e5a8e; color:#fff; padding:18px; border-radius:6px; text-align:center; }
+.pdf-cover .pdf-band h1{ font-size:22px; margin-bottom:4px; }
+.pdf-cover .pdf-band h2{ font-size:16px; font-weight:500; margin-bottom:8px; }
+.pdf-cover .pdf-band p{ font-size:12px; opacity:0.9; }
+.pdf-stimulus-block{ background:#eaf4fd; border:1px solid #d3e9fb; border-radius:8px; padding:14px 16px; }
+.pdf-stimulus-block .pdf-stim-title{ font-size:12px; font-weight:700; color:#2f80c7; margin-bottom:8px; display:block; }
+.pdf-stimulus-block .pdf-stim-text{ font-size:17px; line-height:1.8; white-space:pre-line; }
+.pdf-question-block{ padding:6px 2px; }
+.pdf-question-block .pdf-q-top{ display:flex; gap:10px; align-items:flex-start; margin-bottom:4px; }
+.pdf-question-block .pdf-q-num{ background:#1e5a8e; color:#fff; font-weight:800; font-size:13px; border-radius:14px; padding:3px 12px; flex-shrink:0; }
+.pdf-question-block .pdf-q-instr{ font-size:11px; font-style:italic; color:#7a8ba0; padding-top:4px; }
+.pdf-question-block .pdf-q-text{ font-size:18px; line-height:1.8; font-weight:600; margin:8px 0 12px 0; white-space:pre-line; }
+.pdf-opt{ display:flex; gap:10px; padding:8px 12px; border:1.5px solid #d3e9fb; border-radius:8px; margin-bottom:6px; align-items:center; }
+.pdf-opt .pdf-opt-mark{ width:22px; height:22px; border-radius:50%; border:1.5px solid #4aa3e0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#1e5a8e; flex-shrink:0; }
+.pdf-opt .pdf-opt-text{ font-size:17px; }
+.pdf-kat-row{ display:flex; justify-content:space-between; align-items:center; padding:8px 4px; border-bottom:1px solid #d3e9fb; gap:14px; }
+.pdf-kat-row .pdf-kat-text{ font-size:16px; flex:1; }
+.pdf-kat-row .pdf-kat-choice{ font-size:11px; color:#7a8ba0; white-space:nowrap; font-weight:700; }
+.pdf-kunci-title{ font-size:20px; font-weight:800; color:#1e5a8e; text-align:center; padding:10px 0 16px 0; }
+.pdf-kunci-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 24px; font-size:12px; }
+.pdf-kunci-item{ display:flex; justify-content:space-between; padding:5px 4px; border-bottom:1px solid #eaf4fd; }
+.pdf-kunci-item b{ color:#1e5a8e; }
+.pdf-pembahasan-title{ font-size:18px; font-weight:800; color:#1e5a8e; margin:20px 0 10px 0; border-bottom:2px solid #1e5a8e; padding-bottom:4px;}
+.pdf-pembahasan-item{ margin-bottom:12px; font-size:13px; line-height:1.6; background:#f8fafc; padding:10px; border-radius:6px; border-left:3px solid #2f80c7; }
+.pdf-pembahasan-item b{ color:#1e5a8e; }
+
+.developer-credits{
+  margin-top:20px;
+  text-align:center;
+  font-size:11px;
+  color:var(--abu);
+  border-top:1px dashed var(--biru-muda2);
+  padding-top:12px;
+}
+
+/* KUNCI SOAL: cetak dinonaktifkan */
+@media print{
+  html, body{ background:#fff !important; }
+  body *{ display:none !important; }
+  body::before{ content:"Pencetakan soal dinonaktifkan."; display:block; padding:40px; font:16px/1.6 sans-serif; color:#333; }
+}
+
+@media(max-width:640px){
+  .quiz-body{ flex-direction:column; }
+  .nav-panel{ width:100%; order:2; }
+  .question-panel{ order:1; }
+  .q-text, .option .opt-text{ font-size:15px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================= SCREEN 1: DATA DIRI ================= -->
+<div class="screen active" id="screen-start">
+  <div class="app-header" style="width:100%;">
+    <h1>🇯🇵 TRY OUT TKA BAHASA JEPANG 2026</h1>
+    <p>Simulasi Ujian Berbasis Web (Paket 2 - Bank Soal Baru)</p>
+  </div>
+  <div style="flex:1; display:flex; align-items:center; justify-content:center; padding:24px 16px;">
+    <div class="start-card">
+      <span class="badge">BAHASA JEPANG - PAKET 2</span>
+      <h2>Formulir Data Peserta</h2>
+      <p class="desc">Isi Data Diri Anda sebelum memulai try out.</p>
+
+      <div class="form-group">
+        <label>NAMA LENGKAP</label>
+        <input type="text" id="input-nama" placeholder="Contoh: Ahmad Fadillah" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>NAMA SEKOLAH</label>
+        <input type="text" id="input-sekolah" placeholder="Contoh: SMAN 1 Jakarta" autocomplete="off">
+      </div>
+      <div class="form-group">
+        <label>NISN</label>
+        <input type="text" id="input-nisn" placeholder="Contoh: 0051234567" autocomplete="off" inputmode="numeric">
+      </div>
+
+      <div class="info-box">
+        📋 <b>Ketentuan Try Out Paket 2:</b><br>
+        • Jumlah soal: <b>35 butir</b> (Termasuk ひまな とき/しゅみ &amp; Menyusun Kalimat)<br>
+        • Durasi: <b>75 menit</b> (berjalan otomatis)<br>
+        • Tipe Soal: Pilihan Ganda (5 Opsi), PG Kompleks, &amp; Benar/Salah<br>
+        • Nilai, rincian hasil, serta naskah &amp; pembahasan lengkap berhuruf Kana dapat di-download setelah selesai.
+      </div>
+
+      <button class="btn btn-primary" id="btn-mulai" disabled onclick="mulaiTryOut()">🚀 MULAI TRY OUT</button>
+
+      <div class="developer-credits">
+        Pengembang Aplikasi: <b>Lestario Nofianto, S.Pd Guru Bahasa Jepang</b>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SCREEN 2: QUIZ ================= -->
+<div class="screen" id="screen-quiz">
+  <div class="quiz-topbar">
+    <div class="peserta-info">
+      <b id="tb-nama">-</b><br>
+      NISN: <span id="tb-nisn">-</span> &bull; <span id="tb-sekolah">-</span>
+    </div>
+    <div class="timer-box" id="timer-box">
+      <div class="label">SISA WAKTU</div>
+      <div class="time" id="timer-display">75:00</div>
+    </div>
+  </div>
+
+  <div class="quiz-body">
+    <div class="nav-panel" id="nav-panel">
+      <div class="nav-panel-head">
+        <h3>NAVIGASI SOAL</h3>
+        <button class="btn-collapse" onclick="toggleNavPanel()">◀ Sembunyikan</button>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--merah)"></i>Belum</span>
+        <span><i style="background:var(--hijau)"></i>Sudah</span>
+        <span><i style="background:var(--kuning)"></i>Ragu</span>
+      </div>
+      <div class="nav-grid" id="nav-grid"></div>
+      <div class="nav-summary">
+        Terjawab: <b id="sum-terjawab">0</b>/35<br>
+        Ragu-ragu: <b id="sum-ragu">0</b><br>
+        Belum dijawab: <b id="sum-belum">35</b>
+      </div>
+      <button class="btn btn-danger" style="margin-top:14px;" onclick="konfirmasiKirim()">📤 KIRIM JAWABAN</button>
+    </div>
+
+    <div class="question-panel">
+      <div class="q-meta">
+        <span class="q-number-badge" id="q-number-badge">SOAL 1/35</span>
+        <button class="btn-collapse" id="btn-show-nav" onclick="toggleNavPanel()" style="display:none;">☰ Tampilkan Navigasi</button>
+        <span class="q-type-badge" id="q-type-badge">PILIHAN GANDA</span>
+      </div>
+      <div id="stimulus-container"></div>
+      <div id="image-container" class="q-image-container"></div>
+      <p class="instruksi" id="q-instruksi">Pilih satu jawaban yang paling tepat!</p>
+      <div class="q-text" id="q-text"></div>
+      <div id="q-body"></div>
+
+      <div class="q-nav-buttons">
+        <div class="left-group">
+          <button class="btn btn-secondary" onclick="prevQuestion()">⬅ Sebelumnya</button>
+          <button class="btn btn-outline" id="btn-ragu" onclick="toggleRagu()">🤔 Tandai Ragu-ragu</button>
+        </div>
+        <div class="right-group">
+          <button class="btn btn-primary" onclick="nextQuestion()">Selanjutnya ➡</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="nav-reopen-tab" id="nav-reopen-tab" onclick="toggleNavPanel()">☰ NAVIGASI SOAL</button>
+</div>
+
+<!-- ================= SCREEN 3: RESULT ================= -->
+<div class="screen" id="screen-result">
+  <div class="result-card">
+    <div class="trophy">🏆</div>
+    <h2>Try Out Selesai!</h2>
+    <p class="sub" id="result-nama-sub">Berikut adalah ringkasan hasil ujian Anda.</p>
+
+    <div class="score-circle" id="score-circle" style="--pct:0;">
+      <div class="score-txt" id="score-txt">0%</div>
+    </div>
+
+    <div class="result-stats">
+      <div class="benar"><div class="num" id="stat-benar">0</div><div class="lbl">BENAR</div></div>
+      <div class="salah"><div class="num" id="stat-salah">0</div><div class="lbl">SALAH</div></div>
+      <div><div class="num" id="stat-waktu">0:00</div><div class="lbl">WAKTU DIPAKAI</div></div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="downloadSertifikat()">📜 DOWNLOAD HASIL SISWA (PDF)</button>
+      <button class="btn btn-outline" onclick="downloadSoalPDF()">📄 DOWNLOAD SOAL &amp; PEMBAHASAN (KANA PDF)</button>
+      <button class="btn btn-secondary" onclick="location.reload()">🔄 Ulangi Try Out</button>
+    </div>
+  </div>
+</div>
+
+<footer class="foot-note">Try Out TKA Bahasa Jepang 2026 - Paket 2</footer>
+
+<div class="pdf-overlay" id="pdf-overlay">
+  <div class="pdf-overlay-box">
+    <div class="pdf-spinner"></div>
+    <p>Sedang menyusun PDF...</p>
+    <span>Memproses teks dan huruf kana</span>
+  </div>
+</div>
+
+<script>
+/* DATA 35 SOAL BAHASA JEPANG PAKET 2 (disimpan terenkode; bukan teks polos) */
+(function(){
+"use strict";
+const _P =
+  "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"+
+  "MSBhQC8rJS8kMkYSUVxRRjESemEuJEN0ISBfPyhwMS8pR1NeVRZJORIjLy0uTHR4YQV7cHAsKylERhkSGxNw0cPuqcSMt8rZDanEyKLMws6zttG3ubOz96LI"+
+  "1gN2Nm1WaCs/Y3R1HR4SRk9dNRB4YyEkWTEsLl8jZ3xjJyleRkJHXV45EHhjCCRONScgRWoxNSo9Z09XQltdWCQSJiAkZVkxJTVYISQ+YQwCY3NiEldZMUdi"+
+  "EgsJbBxqYwFoNiQoIzJBR0MQDA+zsPOiyfbO1vOirN+m0tKtxoIS07OlztG0ocDZpqzSqMC2qcTUos/gzrOp0bavDFyhwPSmrNCowK+pxMVhrca60bGT1azI"+
+  "0cPqaqas3qjAoKnE7qLP3s6ysm5YztGlocDrpqzMqMCCqcfDos/sDdGxsNWsxdHD1anEgrfJ0s7I13Ciz9jOs4nRt4uzssOiy+rO1eqirNKm0epupKyq07OQ"+
+  "ztKhocDdpq/XqMCKaqbRza3GjtGxodWs1tHD+WqmrNCowKCpxO6iz97OsrIQGg8kVzo1aH8PBC4zQzMkJCAvKQ1zChAaDyNGIzUvKEg6PzIPcB4rYzoiVUYS"+
+  "CBRmNVwoKGc2TDprIEkrKTEpbjRIXUJTWEpwXyMpKzZEJzwgD2ZnMy48NUhRRBAMSzFeMSQ3GAF2OyRAKCQ4ID0mQxAKEGVsHHMKb2oRSD84YUAvKykgOiZG"+
+  "U14SfUg+WCtsOSRDdColTCYkOGGtxr7RsbTVrMPRw8epxLa3ysUNYjY5MjkmDWF9cx8BcFA3KisrDTkqKUw5LCM2L2cF0bGS1azU0cPNqcSit8razsvBeW9s"+
+  "OgFJElxZD2oAc21oMVQkLmMXaC4xNSsgQkBZEBoPOVwxNTgwRiciYxdoBzUzKiZeU0JZV0NwRicqOWVmMSUrRGc2MS9uI0QSUUZXXnwSNiQkMVg/Ki8NCAAe"+
+  "ABxnTEZRRxZ+EX4DCWtnAXY4NUQnMDw0PWUXENOwh87TgaHD8qaswajDvqnE/2Gtxr7RsbTVrMPRw8epxLa3ysXOy+KzwNekrbBsXNWs7tHDxanEr7fK1A2p"+
+  "xMeiz+bOs6jRt4Zw0cPLqcSgt8r/zsvcs8HMG0PRsaXVrPHRw9mpxIK3ydLOy+5wos/FzrOl0be5s7PtosjWztbZYc7L2rPA96SslNOyt87RnaHA66aszKjA"+
+  "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"+
+  "";
+const _K = "BAJE-TKA-JEPANG-2026-P2";
+function _dec(){
+  const bin = atob(_P);
+  const out = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++){ out[i] = bin.charCodeAt(i) ^ _K.charCodeAt(i % _K.length); }
+  return JSON.parse(new TextDecoder("utf-8").decode(out));
+}
+const QUESTIONS = _dec();
+
+const TOTAL_SOAL = QUESTIONS.length; // 35 soal
+const DURASI_DETIK = 75 * 60; // 75 menit
+
+let peserta = { nama:"", sekolah:"", nisn:"" };
+let currentIndex = 0;
+let answers = {};
+let doubtful = {};
+let timeLeft = DURASI_DETIK;
+let timerInterval = null;
+let submitted = false;
+
+document.getElementById("input-nama").addEventListener("input", cekForm);
+document.getElementById("input-sekolah").addEventListener("input", cekForm);
+document.getElementById("input-nisn").addEventListener("input", cekForm);
+
+function cekForm(){
+  const nama = document.getElementById("input-nama").value.trim();
+  const sekolah = document.getElementById("input-sekolah").value.trim();
+  const nisn = document.getElementById("input-nisn").value.trim();
+  document.getElementById("btn-mulai").disabled = !(nama && sekolah && nisn);
+}
+
+function mulaiTryOut(){
+  peserta.nama = document.getElementById("input-nama").value.trim();
+  peserta.sekolah = document.getElementById("input-sekolah").value.trim();
+  peserta.nisn = document.getElementById("input-nisn").value.trim();
+
+  document.getElementById("tb-nama").textContent = peserta.nama;
+  document.getElementById("tb-sekolah").textContent = peserta.sekolah;
+  document.getElementById("tb-nisn").textContent = peserta.nisn;
+
+  switchScreen("screen-quiz");
+  buildNavGrid();
+  renderQuestion(0);
+  startTimer();
+}
+
+function switchScreen(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+}
+
+function startTimer(){
+  updateTimerDisplay();
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft <= 0){
+      clearInterval(timerInterval);
+      timeLeft = 0;
+      updateTimerDisplay();
+      autoSubmit();
+    }
+  },1000);
+}
+
+function updateTimerDisplay(){
+  const m = Math.floor(timeLeft/60);
+  const s = timeLeft%60;
+  document.getElementById("timer-display").textContent = String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  const box = document.getElementById("timer-box");
+  if(timeLeft <= 300){ box.classList.add("warning"); } else { box.classList.remove("warning"); }
+}
+
+function buildNavGrid(){
+  const grid = document.getElementById("nav-grid");
+  grid.innerHTML = "";
+  QUESTIONS.forEach((q, idx)=>{
+    const btn = document.createElement("button");
+    btn.className = "nav-btn";
+    btn.textContent = q.no;
+    btn.id = "navbtn-"+q.no;
+    btn.onclick = ()=> renderQuestion(idx);
+    grid.appendChild(btn);
+  });
+  refreshNavColors();
+}
+
+function isAnswered(q){
+  const a = answers[q.no];
+  if(a === undefined || a === null) return false;
+  if(q.type === "pg") return !!a;
+  if(q.type === "mcma") return Array.isArray(a) && a.length>0;
+  if(q.type === "kategori") return Array.isArray(a) && a.length === q.statements.length && a.every(v=>v!==null && v!==undefined);
+  return false;
+}
+
+function refreshNavColors(){
+  let terjawab=0, ragu=0;
+  QUESTIONS.forEach((q, idx)=>{
+    const btn = document.getElementById("navbtn-"+q.no);
+    btn.classList.remove("answered","doubt","current");
+    if(idx === currentIndex) btn.classList.add("current");
+    if(doubtful[q.no]){
+      btn.classList.add("doubt"); ragu++;
+      if(isAnswered(q)) terjawab++;
+    } else if(isAnswered(q)){
+      btn.classList.add("answered"); terjawab++;
+    }
+  });
+  document.getElementById("sum-terjawab").textContent = terjawab;
+  document.getElementById("sum-ragu").textContent = ragu;
+  document.getElementById("sum-belum").textContent = TOTAL_SOAL - terjawab;
+}
+
+function renderQuestion(idx){
+  currentIndex = idx;
+  const q = QUESTIONS[idx];
+
+  document.getElementById("q-number-badge").textContent = "SOAL "+q.no+"/"+TOTAL_SOAL;
+  const typeLabel = q.type === "pg" ? "PILIHAN GANDA" : q.type === "mcma" ? "PG KOMPLEKS (MCMA)" : "BENAR / SALAH";
+  document.getElementById("q-type-badge").textContent = typeLabel;
+  document.getElementById("q-instruksi").textContent = q.instruksi;
+  document.getElementById("q-text").textContent = q.text;
+
+  const stimContainer = document.getElementById("stimulus-container");
+  if(q.stimulus){
+    stimContainer.innerHTML = '<div class="stimulus-box"><span class="stim-label">📖 BACAAN / STIMULUS</span>'+escapeHtml(q.stimulus)+'</div>';
+  } else {
+    stimContainer.innerHTML = "";
+  }
+
+  const imgContainer = document.getElementById("image-container");
+  if(q.image){
+    imgContainer.innerHTML = q.image;
+  } else {
+    imgContainer.innerHTML = "";
+  }
+
+  const body = document.getElementById("q-body");
+  body.innerHTML = "";
+
+  if(q.type === "pg"){
+    const wrap = document.createElement("div");
+    wrap.className = "options";
+    const selected = answers[q.no];
+    q.options.forEach(opt=>{
+      const div = document.createElement("div");
+      div.className = "option" + (selected === opt.id ? " selected" : "");
+      div.onclick = ()=> pilihPG(q.no, opt.id);
+      div.innerHTML = '<span class="opt-mark">'+opt.id.toUpperCase()+'</span><span class="opt-text">'+escapeHtml(opt.text)+'</span>';
+      wrap.appendChild(div);
+    });
+    body.appendChild(wrap);
+
+  } else if(q.type === "mcma"){
+    const wrap = document.createElement("div");
+    wrap.className = "options";
+    const selected = answers[q.no] || [];
+    q.options.forEach(opt=>{
+      const div = document.createElement("div");
+      div.className = "option checkbox" + (selected.includes(opt.id) ? " selected" : "");
+      div.onclick = ()=> pilihMCMA(q.no, opt.id);
+      div.innerHTML = '<span class="opt-mark">'+(selected.includes(opt.id) ? "✓" : "")+'</span><span class="opt-text">'+escapeHtml(opt.text)+'</span>';
+      wrap.appendChild(div);
+    });
+    body.appendChild(wrap);
+
+  } else if(q.type === "kategori"){
+    const table = document.createElement("table");
+    table.className = "kategori-table";
+    const current = answers[q.no] || new Array(q.statements.length).fill(null);
+    q.statements.forEach((st, i)=>{
+      const tr = document.createElement("tr");
+      const val = current[i];
+      tr.innerHTML = '<td class="stmt">'+escapeHtml(st.text)+'</td>'+
+        '<td><div class="kategori-choice">'+
+        '<button class="kc-btn benar'+(val===true?" active":"")+'" onclick="pilihKategori('+q.no+','+i+',true,'+q.statements.length+')">BENAR</button>'+
+        '<button class="kc-btn salah'+(val===false?" active":"")+'" onclick="pilihKategori('+q.no+','+i+',false,'+q.statements.length+')">SALAH</button>'+
+        '</div></td>';
+      table.appendChild(tr);
+    });
+    body.appendChild(table);
+  }
+
+  const raguBtn = document.getElementById("btn-ragu");
+  raguBtn.style.background = doubtful[q.no] ? "var(--kuning)" : "";
+  raguBtn.style.color = doubtful[q.no] ? "#5a4400" : "";
+  raguBtn.style.borderColor = doubtful[q.no] ? "var(--kuning)" : "";
+
+  refreshNavColors();
+}
+
+function escapeHtml(str){
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function pilihPG(no, optId){
+  answers[no] = optId;
+  renderQuestion(currentIndex);
+}
+
+function pilihMCMA(no, optId){
+  let arr = answers[no] ? answers[no].slice() : [];
+  if(arr.includes(optId)){
+    arr = arr.filter(x=>x!==optId);
+  } else {
+    arr.push(optId);
+  }
+  answers[no] = arr;
+  renderQuestion(currentIndex);
+}
+
+function pilihKategori(no, idx, val, totalStmt){
+  let arr = answers[no] ? answers[no].slice() : new Array(totalStmt).fill(null);
+  arr[idx] = val;
+  answers[no] = arr;
+  renderQuestion(currentIndex);
+}
+
+function toggleRagu(){
+  const q = QUESTIONS[currentIndex];
+  doubtful[q.no] = !doubtful[q.no];
+  renderQuestion(currentIndex);
+}
+
+function prevQuestion(){
+  if(currentIndex > 0) renderQuestion(currentIndex - 1);
+}
+function nextQuestion(){
+  if(currentIndex < TOTAL_SOAL - 1) renderQuestion(currentIndex + 1);
+  else konfirmasiKirim();
+}
+
+let navPanelHidden = false;
+function toggleNavPanel(){
+  navPanelHidden = !navPanelHidden;
+  const navPanel = document.getElementById("nav-panel");
+  const reopenTab = document.getElementById("nav-reopen-tab");
+  const btnShowNav = document.getElementById("btn-show-nav");
+
+  if(navPanelHidden){
+    navPanel.classList.add("collapsed");
+    reopenTab.classList.add("visible");
+    btnShowNav.style.display = "inline-flex";
+  } else {
+    navPanel.classList.remove("collapsed");
+    reopenTab.classList.remove("visible");
+    btnShowNav.style.display = "none";
+  }
+}
+
+function konfirmasiKirim(){
+  const belum = TOTAL_SOAL - QUESTIONS.filter(q=>isAnswered(q)).length;
+  const pesan = belum > 0
+    ? "Masih ada "+belum+" soal yang belum dikerjakan.\n\nYakin ingin mengirim jawaban?"
+    : "Semua soal telah dikerjakan.\n\nKirim jawaban sekarang?";
+  if(confirm(pesan)){
+    finishTest(false);
+  }
+}
+
+function autoSubmit(){
+  if(submitted) return;
+  alert("⏰ Waktu habis! Soal dikirim otomatis.");
+  finishTest(true);
+}
+
+let hasilAkhir = { benar:0, salah:0, skor:0, persentase:0, waktuPakai:0 };
+
+function finishTest(otomatis){
+  if(submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+
+  let benar = 0;
+  QUESTIONS.forEach(q=>{
+    if(cekJawabanBenar(q)) benar++;
+  });
+  const salah = TOTAL_SOAL - benar;
+  const persentase = Math.round((benar / TOTAL_SOAL) * 100);
+  const waktuPakai = DURASI_DETIK - timeLeft;
+
+  hasilAkhir = { benar, salah, skor:persentase, persentase, waktuPakai };
+  tampilkanHasil();
+}
+
+function cekJawabanBenar(q){
+  const a = answers[q.no];
+  if(a === undefined || a === null) return false;
+  if(q.type === "pg"){
+    return a === q.correct;
+  } else if(q.type === "mcma"){
+    if(!Array.isArray(a)) return false;
+    const sa = [...a].sort().join(",");
+    const sc = [...q.correct].sort().join(",");
+    return sa === sc;
+  } else if(q.type === "kategori"){
+    if(!Array.isArray(a) || a.length !== q.statements.length) return false;
+    return q.statements.every((st,i)=> a[i] === st.correct);
+  }
+  return false;
+}
+
+function tampilkanHasil(){
+  switchScreen("screen-result");
+  document.getElementById("result-nama-sub").textContent = "Selamat "+peserta.nama+"! Berikut rincian hasil Try Out TKA Bahasa Jepang 2026 Anda.";
+  document.getElementById("score-circle").style.setProperty("--pct", hasilAkhir.persentase);
+  document.getElementById("score-txt").textContent = hasilAkhir.persentase + "%";
+  document.getElementById("stat-benar").textContent = hasilAkhir.benar;
+  document.getElementById("stat-salah").textContent = hasilAkhir.salah;
+  const m = Math.floor(hasilAkhir.waktuPakai/60);
+  const s = hasilAkhir.waktuPakai%60;
+  document.getElementById("stat-waktu").textContent = String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+
+/* SERTIFIKAT HASIL SISWA (PDF) */
+function downloadSertifikat(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:"landscape", unit:"mm", format:"a4" });
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+
+  doc.setDrawColor(30,90,142);
+  doc.setLineWidth(2);
+  doc.rect(8,8,W-16,H-16);
+  doc.setDrawColor(74,163,224);
+  doc.setLineWidth(0.6);
+  doc.rect(12,12,W-24,H-24);
+
+  doc.setTextColor(30,90,142);
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(24);
+  doc.text("HASIL TRY OUT TKA BAHASA JEPANG 2026", W/2, 32, { align:"center" });
+
+  doc.setFontSize(14);
+  doc.setTextColor(47,128,199);
+  doc.text(peserta.sekolah.toUpperCase(), W/2, 41, { align:"center" });
+
+  doc.setDrawColor(211,233,251);
+  doc.setLineWidth(1);
+  doc.line(W/2-60, 46, W/2+60, 46);
+
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(11);
+  doc.setTextColor(90,90,90);
+  doc.text("Diberikan kepada:", W/2, 58, { align:"center" });
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(22);
+  doc.setTextColor(28,53,80);
+  doc.text(peserta.nama.toUpperCase(), W/2, 70, { align:"center" });
+
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(12);
+  doc.setTextColor(90,90,90);
+  doc.text("NISN: "+peserta.nisn+"   |   Sekolah: "+peserta.sekolah, W/2, 78, { align:"center" });
+
+  const boxY = 92;
+  doc.setFillColor(234,244,253);
+  doc.roundedRect(W/2-80, boxY, 160, 45, 4, 4, "F");
+  doc.setDrawColor(211,233,251);
+  doc.roundedRect(W/2-80, boxY, 160, 45, 4, 4, "S");
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(32);
+  doc.setTextColor(30,90,142);
+  doc.text(hasilAkhir.persentase + "%", W/2-48, boxY+24, { align:"center" });
+  doc.setFontSize(9);
+  doc.setFont("helvetica","normal");
+  doc.text("PERSENTASE BENAR", W/2-48, boxY+33, { align:"center" });
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(14);
+  doc.setTextColor(63,180,122);
+  doc.text("JUMLAH BENAR: " + hasilAkhir.benar + " Soal", W/2+10, boxY+18);
+  doc.setTextColor(224,82,82);
+  doc.text("JUMLAH SALAH: " + hasilAkhir.salah + " Soal", W/2+10, boxY+28);
+
+  const mm = Math.floor(hasilAkhir.waktuPakai/60);
+  const ss = hasilAkhir.waktuPakai%60;
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(10);
+  doc.setTextColor(90,90,90);
+  doc.text("Waktu Pengerjaan: " + String(mm).padStart(2,"0") + " Menit " + String(ss).padStart(2,"0") + " Detik", W/2, boxY+56, { align:"center" });
+
+  const tanggal = new Date().toLocaleDateString("id-ID", { day:"numeric", month:"long", year:"numeric" });
+  doc.setFontSize(9);
+  doc.text("Dicetak otomatis oleh Sistem Try Out pada " + tanggal, W/2, H-20, { align:"center" });
+
+  doc.save("Hasil_TryOut_BahasaJepang_"+peserta.nama.replace(/\s+/g,"_")+".pdf");
+}
+
+/* DOWNLOAD SOAL & PEMBAHASAN PDF (KANA) */
+function escAttr(str){
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function buildQuestionBlockHtml(q){
+  let body = "";
+  if(q.type === "pg" || q.type === "mcma"){
+    body = q.options.map(opt=>
+      '<div class="pdf-opt"><span class="pdf-opt-mark">'+opt.id.toUpperCase()+'</span><span class="pdf-opt-text">'+escAttr(opt.text)+'</span></div>'
+    ).join("");
+  } else if(q.type === "kategori"){
+    body = q.statements.map((st,i)=>
+      '<div class="pdf-kat-row"><span class="pdf-kat-text">'+escAttr(st.text)+'</span><span class="pdf-kat-choice">[ BENAR ]  [ SALAH ]</span></div>'
+    ).join("");
+  }
+  const badge = q.type === "pg" ? "Pilihan Ganda" : q.type === "mcma" ? "PG Kompleks" : "Benar / Salah";
+  const imgHtml = q.image ? '<div style="text-align:center; margin:10px 0;">'+q.image+'</div>' : '';
+  const stimHtml = q.stimulus ? '<div class="pdf-stimulus-block" style="margin-bottom:8px;"><span class="pdf-stim-title">📖 TEKS SOAL</span><div class="pdf-stim-text">'+escAttr(q.stimulus)+'</div></div>' : '';
+
+  return '<div class="pdf-question-block">'+
+    stimHtml + imgHtml +
+    '<div class="pdf-q-top"><span class="pdf-q-num">SOAL '+q.no+'</span><span class="pdf-q-instr">'+escAttr(q.instruksi)+' ('+badge+')</span></div>'+
+    '<div class="pdf-q-text">'+escAttr(q.text)+'</div>'+
+    body+
+    '</div>';
+}
+
+async function downloadSoalPDF(){
+  const overlay = document.getElementById("pdf-overlay");
+  overlay.classList.add("active");
+
+  try{
+    await document.fonts.load("400 18px 'Noto Sans JP'");
+    await document.fonts.load("700 18px 'Noto Sans JP'");
+    await document.fonts.ready;
+  }catch(e){}
+
+  await new Promise(r=>setTimeout(r, 200));
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:"mm", format:"a4" });
+  const pageW = 210, marginX = 12, contentWmm = pageW - marginX*2;
+  const marginTop = 14, pageHmax = 297 - 14;
+  let cursorY = marginTop;
+
+  const renderWidthPx = 720;
+  const pxPerMm = renderWidthPx / contentWmm;
+
+  const stage = document.createElement("div");
+  stage.id = "pdf-render-temp";
+  stage.style.width = renderWidthPx + "px";
+  document.body.appendChild(stage);
+
+  async function renderBlockToPdf(html, gapAfter){
+    stage.innerHTML = html;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const canvas = await html2canvas(stage, { scale:2, backgroundColor:"#ffffff", useCORS:true });
+    const cssHeightPx = canvas.height / 2;
+    const imgHmm = cssHeightPx / pxPerMm;
+
+    if(cursorY + imgHmm > pageHmax){
+      doc.addPage();
+      cursorY = marginTop;
+    }
+    const imgData = canvas.toDataURL("image/jpeg", 0.95);
+    doc.addImage(imgData, "JPEG", marginX, cursorY, contentWmm, imgHmm);
+    cursorY += imgHmm + (gapAfter !== undefined ? gapAfter : 4);
+  }
+
+  const coverHtml =
+    '<div class="pdf-cover">'+
+      '<div class="pdf-band">'+
+        '<h1>SOAL &amp; PEMBAHASAN TRY OUT TKA BAHASA JEPANG 2026</h1>'+
+        '<p>Naskah Lengkap Berhuruf Kana &bull; Paket 2 (35 Soal)</p>'+
+      '</div>'+
+    '</div>';
+  await renderBlockToPdf(coverHtml, 6);
+
+  for(const q of QUESTIONS){
+    await renderBlockToPdf(buildQuestionBlockHtml(q), 4);
+  }
+
+  doc.addPage();
+  cursorY = marginTop;
+
+  const kunciItems = QUESTIONS.map(q=>{
+    let jawabanTxt = "";
+    if(q.type === "pg"){ jawabanTxt = q.correct.toUpperCase(); }
+    else if(q.type === "mcma"){ jawabanTxt = q.correct.map(c=>c.toUpperCase()).join(", "); }
+    else if(q.type === "kategori"){ jawabanTxt = q.statements.map(st=> st.correct ? "BENAR" : "SALAH").join(", "); }
+    return '<div class="pdf-kunci-item"><span>Soal '+q.no+':</span><b>'+jawabanTxt+'</b></div>';
+  }).join("");
+
+  const kunciHtml = '<div><div class="pdf-kunci-title">KUNCI JAWABAN SOAL 1 - 35</div><div class="pdf-kunci-grid">'+kunciItems+'</div></div>';
+  await renderBlockToPdf(kunciHtml, 6);
+
+  const pembTitle = '<div class="pdf-pembahasan-title">PEMBAHASAN SOAL LENGKAP</div>';
+  for(let i = 0; i < QUESTIONS.length; i++){
+    const q = QUESTIONS[i];
+    let jawabanTxt = "";
+    if(q.type === "pg"){ jawabanTxt = q.correct.toUpperCase(); }
+    else if(q.type === "mcma"){ jawabanTxt = q.correct.map(c=>c.toUpperCase()).join(", "); }
+    else if(q.type === "kategori"){ jawabanTxt = q.statements.map(st=> st.correct ? "BENAR" : "SALAH").join(", "); }
+    const item = '<div class="pdf-pembahasan-item"><b>Soal Nomor '+q.no+'</b> (Kunci: '+jawabanTxt+')<br>'+escAttr(q.pembahasan)+'</div>';
+    await renderBlockToPdf('<div>'+(i === 0 ? pembTitle : '')+item+'</div>', 0);
+  }
+
+  document.body.removeChild(stage);
+  doc.save("Soal_dan_Pembahasan_Kana_TKA_BahasaJepang_2026_Paket2.pdf");
+
+  overlay.classList.remove("active");
+}
+
+window.addEventListener("beforeunload", function(e){
+  if(document.getElementById("screen-quiz").classList.contains("active") && !submitted){
+    e.preventDefault();
+    e.returnValue = "";
+  }
+});
+
+/* ================= KUNCI SOAL: cegah salin / tempel / seleksi ================= */
+function inField(t){
+  const el = (t && t.nodeType === 1) ? t : (t ? t.parentElement : null);
+  return !!(el && el.closest && el.closest("input, textarea"));
+}
+["copy","cut","dragstart","selectstart","contextmenu"].forEach(function(ev){
+  document.addEventListener(ev, function(e){ if(!inField(e.target)) e.preventDefault(); }, true);
+});
+document.addEventListener("keydown", function(e){
+  const k = (e.key || "").toLowerCase();
+  const ctrl = e.ctrlKey || e.metaKey;
+  const field = inField(e.target);
+  if(ctrl && (k === "c" || k === "x" || k === "a") && !field){ e.preventDefault(); return; }
+  if(ctrl && (k === "s" || k === "p" || k === "u")){ e.preventDefault(); return; }
+  if(k === "f12"){ e.preventDefault(); return; }
+  if(ctrl && e.shiftKey && (k === "i" || k === "j" || k === "c" || k === "k")){ e.preventDefault(); return; }
+}, true);
+document.addEventListener("keyup", function(e){
+  if((e.key || "") === "PrintScreen"){
+    try{ navigator.clipboard.writeText(" "); }catch(_){}
+  }
+}, true);
+
+/* handler yang dipanggil dari atribut onclick */
+Object.assign(window, {
+  mulaiTryOut: mulaiTryOut, toggleNavPanel: toggleNavPanel, konfirmasiKirim: konfirmasiKirim,
+  prevQuestion: prevQuestion, nextQuestion: nextQuestion, toggleRagu: toggleRagu,
+  downloadSertifikat: downloadSertifikat, downloadSoalPDF: downloadSoalPDF, pilihKategori: pilihKategori
+});
+})();
+</script>
+</body>
+</html>
